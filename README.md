@@ -1,9 +1,7 @@
-# Express req.query -> Mongoose model find options
-## New in 0.0.10
-### ObjectId
-- url: /api/item?name=_53c699da9189110000454007
-    + name: ObjectId(53c699da9189110000454007)
 
+# Express req.query -> mysql
+## New in 0.0.1
+### ObjectId
 
 ## Simple use in server api controller:
 
