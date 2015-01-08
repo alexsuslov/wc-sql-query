@@ -8,13 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexsuslov/wcQuery.git"
+    "url": "https://github.com/alexsuslov/wc-sql-query.git"
   },
   "keywords": [
     "express",
     "generator-angular-fullstack",
     "rest",
-    "mongodb",
     "api"
   ],
   "author": {
@@ -30,32 +29,10 @@
     "grunt-mocha-test": "^0.11.0",
     "load-grunt-tasks": "^0.6.0"
   },
-  "dependencies": {
-    "mongoose": "^3.8.14"
-  },
-  "gitHead": "64a45cff469b7b8faeaf603be01a264d27073ecf",
-  "bugs": {
-    "url": "https://github.com/alexsuslov/wcQuery/issues"
-  },
-  "homepage": "https://github.com/alexsuslov/wcQuery",
-  "_id": "wc-query@0.0.13",
-  "_shasum": "d4bb1242cc68c4e349441acb647a941c5c307ff3",
-  "_from": "wc-query@0.0.13",
-  "_npmVersion": "1.4.28",
-  "_npmUser": {
-    "name": "alexsuslov",
-    "email": "suslov.alex@gmail.com"
-  },
   "maintainers": [
     {
       "name": "alexsuslov",
       "email": "suslov.alex@gmail.com"
     }
-  ],
-  "dist": {
-    "shasum": "d4bb1242cc68c4e349441acb647a941c5c307ff3",
-    "tarball": "http://registry.npmjs.org/wc-query/-/wc-query-0.0.13.tgz"
-  },
-  "directories": {},
-  "_resolved": "https://registry.npmjs.org/wc-query/-/wc-query-0.0.13.tgz"
+  ]
 }
