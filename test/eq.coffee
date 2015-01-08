@@ -1,21 +1,6 @@
 query = require("../coffee/index")
 assert = require("assert")
 
-# mongoose = require('mongoose')
-# Schema = mongoose.Schema
-# ObjectId = Schema.Types.ObjectId
-
-# model = mongoose.model 'test', new Schema
-#   str: String
-#   num: Number
-#   dat: Date
-#   bl: Boolean
-#   ar: Array
-#   obId: ObjectId
-#   t:
-#     id:Number
-
-
 describe "Query", ->
 #   describe "#OR /?name=+", ->
 #     it "should return { name: { '$exists': true } }",->
