@@ -1,18 +1,11 @@
 'use strict';
-var ObjectId, Query, Schema, mongoose;
-
-mongoose = require('mongoose');
-
-Schema = mongoose.Schema;
-
-ObjectId = Schema.Types.ObjectId;
-
 
 /*
 Express req.query -> mysql select where, order, limit
 @author Alex Suslov <suslov@me.com>
 @copyright MIT
  */
+var Query;
 
 Query = {
   query: false,
@@ -21,11 +14,13 @@ Query = {
   main
   @param query[String] string from EXPRESS req
   @return Object
-    conditions: mongo filter object
-    options: mongo find options
+    where: String
+    order: String
+    limit: String
    */
-  main: function(query) {
+  main: function(query, types) {
     this.query = query;
+    this.types = types;
     this.where = '';
     this.order = '';
     this.sort().lim().opt();
@@ -69,13 +64,10 @@ Query = {
     if (this.type === 'Boolean') {
       return !!val;
     }
-    if (this.type === 'ObjectID') {
-      return new ObjectId(val);
-    }
     if (this.type === 'Date') {
       return new Date(val);
     }
-    return val;
+    return "'" + val + "'";
   },
 
   /*
@@ -96,7 +88,7 @@ Query = {
     var eqv, tr;
     tr = this._str(str);
     eqv = function(simbol, val) {
-      return simbol + '\'' + val + '\'';
+      return simbol + val;
     };
     switch (str[0]) {
       case '>':
@@ -109,6 +101,8 @@ Query = {
         return eqv('<=', this.parseVal(tr));
       case '!':
         return eqv('!=', this.parseVal(tr));
+      case '~':
+        return eqv('=%', this.parseVal(tr) + '%');
       default:
         return eqv('=', this.parseVal(str));
     }
@@ -127,42 +121,28 @@ Query = {
   Create options from query
    */
   opt: function() {
-    var comma, name, val;
+    var comma, name, nm, val;
     if (this.query) {
       comma = '';
       for (name in this.query) {
         this.query[name] = decodeURI(this.query[name]);
+        this.type = this.detectType(name);
         if (this.query[name]) {
+          nm = name;
           val = this.parse(this.query[name]);
-          this.where += "" + comma + name + val;
-          comma = ', ';
+          this.where += "" + comma + nm + val;
+          comma = ' and ';
         }
       }
-      console.log(this.where);
     }
     return this;
   },
   detectType: function(name) {
     var _ref;
-    if (this.model && this.model.schema.path(name)) {
-      if (this.model.schema.path(name).instance === 'undefined') {
-        if ((_ref = model.schema.path(name).options) != null ? _ref.type : void 0) {
-          if (model.schema.path(name).options.type.name === Date) {
-            return 'Date';
-          }
-          if (model.schema.path(name).options.type.name === Boolean) {
-            return 'Boolean';
-          }
-          if (model.schema.path(name).options.type.name === Array) {
-            return 'Array';
-          }
-        }
-      }
-      if (this.model) {
-        return this.model.schema.path(name).instance;
-      }
+    if (!((_ref = this.types) != null ? _ref[name] : void 0)) {
+      return 'String';
     }
-    return 'String';
+    return this.types[name].name;
   },
 
   /*
@@ -194,8 +174,8 @@ Query = {
   }
 };
 
-module.exports = function(query) {
-  return Query.main(query);
+module.exports = function(query, types) {
+  return Query.main(query, types);
 };
 
 module.exports.Query = Query;

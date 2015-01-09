@@ -1,7 +1,4 @@
 'use strict'
-mongoose = require('mongoose')
-Schema = mongoose.Schema
-ObjectId = Schema.Types.ObjectId
 ###
 Express req.query -> mysql select where, order, limit
 @author Alex Suslov <suslov@me.com>
@@ -14,10 +11,11 @@ Query =
   main
   @param query[String] string from EXPRESS req
   @return Object
-    conditions: mongo filter object
-    options: mongo find options
+    where: String
+    order: String
+    limit: String
   ###
-  main:(@query)->
+  main:(@query, @types)->
     @where = ''
     @order = ''
 
@@ -53,9 +51,8 @@ Query =
   parseVal:(val)->
     return parseFloat val   if @type is 'Number'
     return !!val            if @type is 'Boolean'
-    return new ObjectId val if @type is 'ObjectID'
     return new Date val     if @type is 'Date'
-    val
+    "'#{val}'"
 
 
   ###
@@ -74,7 +71,7 @@ Query =
   parse:(str)->
     tr = @_str str
     eqv = (simbol, val)->
-      simbol + '\'' + val + '\''
+      simbol +  val
     switch str[0]
       # when '%'
       #   return $mod: tr.split '|' if str[0] is '%'
@@ -101,14 +98,13 @@ Query =
       # Exists
       # return "$exists": true if str is '+'
       # return "$exists": false if str is '-'
-      # # ~regex
-      # return $regex:@escapeRegExp( tr), $options:'i' if str[0] is '~'
+      # # ~
+      when '~'
+        eqv '=%', @parseVal(tr) + '%'
       # text
       # return $text:$search:tr if str[0] is '$'
       else
         eqv '=', @parseVal(str)
-
-
 
   ###
   Cut first char from string
@@ -127,33 +123,18 @@ Query =
       for name of @query
         @query[name] = decodeURI @query[name]
         # detect type
-        # @type = @detectType name
+        @type = @detectType name
         if @query[name]
+          nm = name
           val = @parse @query[name]
-          @where += "#{comma}#{name}#{val}"
-          comma = ', '
-      console.log @where
+          @where += "#{comma}#{nm}#{val}"
+          comma = ' and '
     @
 
   detectType: (name)->
-    if @model and @model.schema.path(name)
-      # Date Boolean Array
-      if @model.schema.path(name).instance is 'undefined'
-        if model.schema.path(name).options?.type
-
-          if model.schema.path(name).options.type.name is Date
-            return 'Date'
-
-          if model.schema.path(name).options.type.name is Boolean
-            return 'Boolean'
-
-          if model.schema.path(name).options.type.name is Array
-            return 'Array'
-
-      # Number String ObjectID
-      return @model.schema.path(name).instance if @model
-    'String'
-
+    # return 'String' unless @types
+    return 'String' unless @types?[name]
+    @types[name].name
 
   ###
   Create sort from query
@@ -180,8 +161,8 @@ Query =
     @
 
 
-module.exports = (query)->
-  Query.main query
+module.exports = (query, types)->
+  Query.main query, types
 
 
 module.exports.Query = Query

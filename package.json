@@ -1,6 +1,6 @@
 {
-  "name": "wc-sqlquery",
-  "version": "0.0.1",
+  "name": "wc-sql-query",
+  "version": "0.0.2",
   "description": "convert req.query to mysql select where, order, limit",
   "main": "index.js",
   "scripts": {

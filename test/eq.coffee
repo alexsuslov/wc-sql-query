@@ -59,18 +59,15 @@ describe "Query", ->
 #       # console.log opt
       assert.equal  '100, 50', opt.limit
 
-
-
   ###
   #
   # Evaluation Query Operators
   #
   ###
-  # describe "#REGEX name=~test", ->
+  # describe "# name=~test", ->
   #   it "should return conditions: name: $regex: 'test'", ->
   #     opt = query name:"~test"
-  #     # console.log opt
-  #     assert.equal  'test', opt.conditions.name["$regex"]
+  #     assert.equal  'name LIKE \'%test%\'', opt.where
   ###
   #
   #   Comparison Query Operators
@@ -85,7 +82,7 @@ describe "Query", ->
   describe "#EQ name=test&name1=qwe", ->
     it "should return { where: name='test'}", ->
       opt = query (name:"test",name1:'qwe')
-      assert.equal  "name='test', name1='qwe'", opt.where
+      assert.equal  "name='test' and name1='qwe'", opt.where
 
   describe "#NEQ name=!test", ->
     it "should return { conditions: 'name:$ne:test'", ->
@@ -109,11 +106,11 @@ describe "Query", ->
       # console.log opt
       assert.equal  "name<'3'", opt.where
 
-  describe "#LTE name=<3", ->
-    it "should return name<='3'", ->
-      opt = query name:"[3"
+  describe "#LTE num=<3", ->
+    it "should return num<=3", ->
+      opt = query {num:"[3"}, { num: Number}
       # console.log opt
-      assert.equal  assert.equal  "name<='3'", opt.where
+      assert.equal  assert.equal  "num<=3", opt.where
 
 #   describe "#IN name=@1|2|3", ->
 #     it "should return conditions: $in: ['1','2','3'] ", ->

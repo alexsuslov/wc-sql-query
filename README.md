@@ -1,96 +1,61 @@
 
-# Express req.query -> mysql
-## New in 0.0.1
-### ObjectId
-
-## Simple use in server api controller:
-
+# Express req.query -> mysql where
+## New in 0.0.2
+- types
+## Use
 ```
-"use strict"
+Query = require("wc-sql-query")
 
-_ = require("lodash")
-Item = require("./item.model")
-Query = require("wc-query")
-fields = {}
-
-# Get list of items
-exports.index = (req, res) ->
-  query = Query(req.query)
-  Item.find query.conditions, fields, query.options, (err, items) ->
-    throw err if err
-    return handleError(res, err)  if err
-    res.json 200, items
+Firm =
+  table:'`2015`.`firm`'
+  find:(q, fields, fn)->
+    query = Query q
+    where = (if query.where then " WHERE #{query.where}" else "")
+    order = (if query.order then " ORDER BY #{query.order}" else "")
+    limit = (if query.limit then " LIMIT #{query.limit}" else "")
+    sql = "SELECT #{fields} FROM #{@table} #{where} #{order} #{limit};"
+    Mysql.query sql, fn
 ```
-
-## Logical Query Operators
-### OR 
-- /?or='name=3,test=!4'
-    + { '$or': [ { name: '3' }, { test: $ne :4 } ] }
-
-### AND 
-- /?and='name=3,test=!4'
-    + { '$and': [ { name: '3' }, { test: $ne :4 } ] }
-
 
 ## Comparison Query Operators
 
 ### EQ
 - url: /api/item?name=test
-    + name: 'test'
-
-### Exists
-
-- url: /api/item?name=+
-    + name: $exists: true
-
-- url: /api/item?name=-
-    + name: $exists: false
-
-### ObjectId
-- url: /api/item?name=_53c699da9189110000454007
-    + name: ObjectId(53c699da9189110000454007)
+    + WHERE name='test'
 
 ### NEQ
 - url: /api/item?name=!test
-    + name: $ne: 'test'
+    + WHERE name!='test'
 
 ### GT
-- url: /api/item?name=>1
-    + name: $gt: 1
+- url: /api/item?name=>test
+    + WHERE name>'test'
 
 ### GTE
-- url: /api/item?name=]1
-    + name: $gte: 1
+- url: /api/item?name=]test
+    + WHERE name=>'test'
 
 ### LT
-- url: /api/item?name=<1
-    + name: $lt: 1
+- url: /api/item?name=< test
+    + WHERE name=<'test'
 
 ### LTE
-- url: /api/item?name=[1
-    + name: $lte: 1
-
-### IN 
-- url: /api/item?name=@1|2|3
-    + name: $in: ['1','2','3']
-
-### NIN 
-- url: /api/item?name=#1|2|3
-    + name: $nin: ['1','2','3']
+- url: /api/item?name=[test
+    + WHERE name=<'test'
 
 ## Evaluation Query Operators
-### REGEX 
+###  
 - url: /api/item?name=~test
-    + name: $regex: 'test'
+    + WHERE name='%test%'
 
 
 ## Sort
 
 - /api/item?order=name
-    + options.sort:{name:1}
+    + name
 - /api/item?order=-name
-    + options.sort:{name:-1}
+    + name DESC
 
 ## Limit
 - /api/item?limit=25&skip=0
-    + options.sort:{skip:0,limit:25}
+    + 0, 25
