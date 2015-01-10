@@ -64,10 +64,10 @@ describe "Query", ->
   # Evaluation Query Operators
   #
   ###
-  # describe "# name=~test", ->
-  #   it "should return conditions: name: $regex: 'test'", ->
-  #     opt = query name:"~test"
-  #     assert.equal  'name LIKE \'%test%\'', opt.where
+  describe "# name=~test", ->
+    it "should return name LIKE \'%test%\'", ->
+      opt = query name:"~test"
+      assert.equal  'name LIKE \'%test%\'', opt.where
   ###
   #
   #   Comparison Query Operators

@@ -102,7 +102,7 @@ Query = {
       case '!':
         return eqv('!=', this.parseVal(tr));
       case '~':
-        return eqv('=%', this.parseVal(tr) + '%');
+        return eqv(' LIKE ', "'%" + tr + "%'");
       default:
         return eqv('=', this.parseVal(str));
     }

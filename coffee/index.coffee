@@ -100,7 +100,7 @@ Query =
       # return "$exists": false if str is '-'
       # # ~
       when '~'
-        eqv '=%', @parseVal(tr) + '%'
+        eqv ' LIKE ', "'%#{tr}%'"
       # text
       # return $text:$search:tr if str[0] is '$'
       else

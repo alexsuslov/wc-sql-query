@@ -44,7 +44,7 @@ Firm =
     + WHERE name=<'test'
 
 ## Evaluation Query Operators
-###  
+### 
 - url: /api/item?name=~test
     + WHERE name='%test%'
 
