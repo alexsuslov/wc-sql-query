@@ -67,7 +67,7 @@ describe "Query", ->
   describe "# name=~test", ->
     it "should return name LIKE \'%test%\'", ->
       opt = query name:"~test"
-      assert.equal  'name LIKE \'%test%\'', opt.where
+      assert.equal  '`name` LIKE \'%test%\'', opt.where
   ###
   #
   #   Comparison Query Operators
@@ -76,41 +76,41 @@ describe "Query", ->
   describe "#EQ name=test", ->
     it "should return { where: name='test'}", ->
       opt = query name:"test"
-      assert.equal  "name='test'", opt.where
+      assert.equal  "`name`='test'", opt.where
       assert.equal  "0, 25", opt.limit
 
   describe "#EQ name=test&name1=qwe", ->
     it "should return { where: name='test'}", ->
       opt = query (name:"test",name1:'qwe')
-      assert.equal  "name='test' and name1='qwe'", opt.where
+      assert.equal  "`name`='test' and `name1`='qwe'", opt.where
 
   describe "#NEQ name=!test", ->
     it "should return { conditions: 'name:$ne:test'", ->
       opt = query name:"!test"
-      assert.equal  "name!='test'", opt.where
+      assert.equal  "`name`!='test'", opt.where
 
   describe "#GT name>3", ->
     it "should return name>'3'", ->
       opt = query name:">3"
-      assert.equal  "name>'3'", opt.where
+      assert.equal  "`name`>'3'", opt.where
 
   describe "#GTE name=]3", ->
     it "should return name=>'3'", ->
       opt = query name:"]3"
       # console.log opt
-      assert.equal  "name=>'3'", opt.where
+      assert.equal  "`name`=>'3'", opt.where
 
   describe "#LT name=<3", ->
     it "should return name<'3'", ->
       opt = query name:"<3"
       # console.log opt
-      assert.equal  "name<'3'", opt.where
+      assert.equal  "`name`<'3'", opt.where
 
   describe "#LTE num=<3", ->
     it "should return num<=3", ->
       opt = query {num:"[3"}, { num: Number}
       # console.log opt
-      assert.equal  assert.equal  "num<=3", opt.where
+      assert.equal  assert.equal  "`num`<=3", opt.where
 
 #   describe "#IN name=@1|2|3", ->
 #     it "should return conditions: $in: ['1','2','3'] ", ->

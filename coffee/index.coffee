@@ -100,7 +100,7 @@ Query =
       # return "$exists": false if str is '-'
       # # ~
       when '~'
-        eqv ' LIKE ', "'%#{tr}%'"
+        " LIKE '%#{tr}%'"
       # text
       # return $text:$search:tr if str[0] is '$'
       else
@@ -127,7 +127,7 @@ Query =
         if @query[name]
           nm = name
           val = @parse @query[name]
-          @where += "#{comma}#{nm}#{val}"
+          @where += "#{comma}`#{nm}`#{val}"
           comma = ' and '
     @
 

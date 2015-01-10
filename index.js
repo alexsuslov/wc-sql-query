@@ -102,7 +102,7 @@ Query = {
       case '!':
         return eqv('!=', this.parseVal(tr));
       case '~':
-        return eqv(' LIKE ', "'%" + tr + "%'");
+        return " LIKE '%" + tr + "%'";
       default:
         return eqv('=', this.parseVal(str));
     }
@@ -130,7 +130,7 @@ Query = {
         if (this.query[name]) {
           nm = name;
           val = this.parse(this.query[name]);
-          this.where += "" + comma + nm + val;
+          this.where += "" + comma + "`" + nm + "`" + val;
           comma = ' and ';
         }
       }
